@@ -55,7 +55,15 @@ namespace CourseLibrary.API.Controllers
             var authorToReturn = _mapper.Map<AuthorDto>(autorEntity);
 
             return CreatedAtRoute("GetAuthor",
-                new { authorId = authorToReturn.Id }, authorToReturn);
+                new { authorId = authorToReturn.Id },
+                authorToReturn);
+        }
+
+        [HttpOptions]
+        public IActionResult GetAuthorsOpitons()
+        {
+            Response.Headers.Add("Allow", "GET,OPTIONS,POST");
+            return Ok();
         }
     }
 }
