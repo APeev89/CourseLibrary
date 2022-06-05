@@ -52,7 +52,7 @@ namespace CourseLibrary.API.Controllers
 
         }
         [HttpPost]
-        public ActionResult<CourseDto> CreateCourseForAuthor(Guid authorId,CourseForCreateDto course)
+        public ActionResult<CourseDto> CreateCourseForAuthor(Guid authorId,CourseForCreationDto course)
         {
             if (!_courseLibraryRepository.AuthorExists(authorId))
             {
@@ -69,5 +69,24 @@ namespace CourseLibrary.API.Controllers
 
         }
 
+        [HttpPut("{courseId}")]
+        public ActionResult UpdateCourseForAuthor(Guid authorId, Guid courseId, CourseForUpdateDto course)
+        {
+            if (!_courseLibraryRepository.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
+
+            var coursesForAuthorFromRepo = _courseLibraryRepository.GetCourse(authorId, courseId);
+            if (coursesForAuthorFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(course,coursesForAuthorFromRepo);
+            _courseLibraryRepository.UpdateCourse(coursesForAuthorFromRepo);
+            _courseLibraryRepository.Save();
+            return NoContent();
+        }
     }
 }
